@@ -1,0 +1,9 @@
+name: canvas_experiments
+version: "0.1.0"
+description: canvas pixel experiments
+author: Harry Stern <harry.stern@rutgers.edu>
+homepage: https://github.com/boustrophedon/dart-canvas-experiments
+environment:
+  sdk: ">=1.2.0"
+dependencies:
+  browser: any
