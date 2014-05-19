@@ -75,6 +75,13 @@ ImageData unparse_image_data(List<List<Pixel>> pixels) {
 void transform_pixels(List<List<Pixel>> pixels) {
   int width = pixels.first.length;
   int height = pixels.length;
+  for (int i = 0; i < height; i++) {
+    pixels[i] = pixels[i].reversed.toList();
+  }
+  var rev_p = pixels.reversed.toList();
+  for (int i = 0; i < height; i ++) {
+    pixels[i] = rev_p[i];
+  }
 }
 
 CanvasElement canvas;

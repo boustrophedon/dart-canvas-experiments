@@ -1,6 +1,6 @@
 # Don’t commit the following directories created by pub.
 build/
-*packages
+packages
 
 # according to https://www.dartlang.org/tools/pub/package-layout.html
 # pubspec.lock is not included if not application package
