@@ -92,6 +92,7 @@ void transform_pixels(List<List<Pixel>> pixels) {
 
 CanvasElement canvas;
 CanvasRenderingContext2D context;
+ImageLoader loader;
 
 void main() {
   canvas = querySelector("#area");
@@ -100,16 +101,25 @@ void main() {
 
   context = canvas.context2D;
 
-  ImageLoader loader = new ImageLoader(next, {'pepsi':"Pepsi_logo_2008.svg"});
+  loader = new ImageLoader(next, {'pepsi':"Pepsi_logo_2008.svg"});
 }
 
 void next(ImageLoader loader) {
+
+  window.requestAnimationFrame(render);
+
+}
+
+void render(var hiresTimer) {
+  context.clearRect(0,0,canvas.height,canvas.width);
+
   var pepsi = loader.images['pepsi'];
   context.drawImage(pepsi, 0,0);
+
   var pixels = parse_image_data(context.getImageData(0,0,pepsi.width,pepsi.height));
 
   transform_pixels(pixels);
-
   context.putImageData(unparse_image_data(pixels), pepsi.width+20, 0);
 
+  window.requestAnimationFrame(render);
 }
