@@ -1,5 +1,7 @@
 import 'dart:html';
 
+import 'dart:math' show Random;
+
 class ImageLoader {
   Map<String, ImageElement> images;
   Function complete;
@@ -73,14 +75,18 @@ ImageData unparse_image_data(List<List<Pixel>> pixels) {
 }
 
 void transform_pixels(List<List<Pixel>> pixels) {
+  Random rng = new Random();
+
   int width = pixels.first.length;
   int height = pixels.length;
   for (int i = 0; i < height; i++) {
-    pixels[i] = pixels[i].reversed.toList();
-  }
-  var rev_p = pixels.reversed.toList();
-  for (int i = 0; i < height; i ++) {
-    pixels[i] = rev_p[i];
+    for (int j = 0; j < width; j++) {
+      // this does what it does because the background is transparent
+      Pixel p = pixels[i][j];
+      p.r = rng.nextInt(255);
+      p.b = rng.nextInt(255);
+      p.g = rng.nextInt(255);
+    }
   }
 }
 
