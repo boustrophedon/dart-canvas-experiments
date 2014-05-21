@@ -28,7 +28,7 @@ class ImageLoader {
       images[img] = new_image;
       futures.add(new_image.onLoad.first);
     }
-    Future.wait(futures).then(on_completion);
+    Future.wait(futures).then((e) => on_completion());
   }
 }
 
