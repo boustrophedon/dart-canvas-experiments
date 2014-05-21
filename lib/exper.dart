@@ -1,4 +1,6 @@
 import 'dart:html';
+import 'dart:async';
+
 
 class Pixel {
   int r;
@@ -14,24 +16,19 @@ class ImageLoader {
 
   int total;
 
-  ImageLoader(Function onCompletion, Map<String,String> load) {
+  ImageLoader(Function on_completion, Map<String,String> load) {
     images = new Map<String, ImageElement>();
-    total = load.length;
-    complete = onCompletion;
+    var futures = new List<Future<Event>>();
 
     for (String img in load.keys) {
       // because of cors this doesn't work for arbitrary urls
       // workaround: upload to imgur and then grab the image data from there
       // add new_image.crossOrigin = "Anonymous" i think
       ImageElement new_image = new ImageElement(src: load[img]);
-      new_image.onLoad.listen( (e) => loaded(img, new_image));
+      images[img] = new_image;
+      futures.add(new_image.onLoad.first);
     }
-  }
-  void loaded(String img, ImageElement ele) {
-    images[img] = ele;
-    if (images.keys.length == total) {
-      complete();
-    }
+    Future.wait(futures).then(on_completion);
   }
 }
 
