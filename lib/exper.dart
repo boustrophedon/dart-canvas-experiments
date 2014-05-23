@@ -8,7 +8,30 @@ class Pixel {
   int b;
   int a;
   Pixel(this.r, this.g, this.b, this.a);
+  Pixel.zero() : r=0, g=0, b=0, a=0;
 }
+
+Pixel pix_avg(Pixel p1, Pixel p2) {
+  int r = ((p1.r + p2.r)~/2);
+  int g = ((p1.g + p2.g)~/2);
+  int b = ((p1.b + p2.b)~/2);
+  int a = ((p1.a + p2.a)~/2);
+  return new Pixel(r,g,b,a);
+}
+
+List<Pixel> shift_by(List<Pixel> l, int shift) {
+  List<Pixel> shifted = new List<Pixel>();
+  for (int i = 0; i < l.length; i++) {
+    if (i+shift >=0 && i+shift < l.length) {
+      shifted.add(l[i+shift]);
+    }
+    else {
+      shifted.add(new Pixel.zero());
+    }
+  }
+  return shifted;
+}
+
 
 class ImageLoader {
   Map<String, ImageElement> images;

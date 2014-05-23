@@ -22,23 +22,11 @@ class RandomExper extends CanvasExperiment {
 
     var newpix = new_pixels(height, width);
     for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        int uoff = max(i-1,0);
-        int doff = min(i+1,height-1);
-        int loff = max(j-1,0);
-        int roff = min(j+1,width-1);
-
-        Pixel u = pixels[uoff][j];
-        Pixel d = pixels[doff][j];
-        Pixel l = pixels[i][loff];
-        Pixel r = pixels[i][roff];
-
-        int red = ((u.r+d.r+l.r+r.r)/4).toInt();
-        int green = ((u.g+d.g+l.g+r.g)/4).toInt();
-        int blue = ((u.b+d.b+l.b+r.b)/4).toInt();
-        int alpha = ((u.a+d.a+l.a+r.a)/4).toInt();
-
-        newpix[i][j] = new Pixel(red, green, blue, alpha);
+      var rshift = shift_by(pixels[i],1);
+      var lshift = shift_by(pixels[i],-1);
+      for (int j = 0; j<pixels[i].length; j++) {
+        Pixel p = pixels[i][j];
+        newpix[i][j] = pix_avg(pix_avg(p, lshift[j]), rshift[j]);
       }
     }
     return newpix;
