@@ -8,6 +8,12 @@ class Pixel {
   int b;
   int a;
   Pixel(this.r, this.g, this.b, this.a);
+  Pixel.fromPixel(Pixel o) {
+    r = o.r;
+    g = o.g;
+    b = o.b;
+    a = o.a;
+  }
   Pixel.zero() : r=0, g=0, b=0, a=0;
 }
 
@@ -17,6 +23,19 @@ Pixel pix_avg(Pixel p1, Pixel p2) {
   int b = ((p1.b + p2.b)~/2);
   int a = ((p1.a + p2.a)~/2);
   return new Pixel(r,g,b,a);
+}
+
+Pixel pix_avg_all(Pixel p, List<Pixel> pix) {
+  pix.add(p);
+  int l = pix.length;
+  int r=0,g=0,b=0,a=0;
+  for (Pixel o in pix) {
+    r+=o.r;
+    g+=o.g;
+    b+=o.b;
+    a+=o.a;
+  }
+  return new Pixel(r~/l, b~/l, g~/l, a~/l);
 }
 
 List<Pixel> shift_by(List<Pixel> l, int shift) {
@@ -60,14 +79,14 @@ abstract class CanvasExperiment {
   CanvasRenderingContext2D context;
   ImageLoader loader;
 
-  CanvasExperiment() {
+  CanvasExperiment(Map<String, String> images) {
     canvas = querySelector("#area");
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
     context = canvas.context2D;
 
-    loader = new ImageLoader(this.run, {'pepsi':"Pepsi_logo_2008.svg"});
+    loader = new ImageLoader(this.run, images);
   }
 
   List<List<Pixel>> new_pixels(int height, int width) {
