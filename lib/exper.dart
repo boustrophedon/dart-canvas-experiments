@@ -47,14 +47,21 @@ abstract class CanvasExperiment {
     loader = new ImageLoader(this.run, {'pepsi':"Pepsi_logo_2008.svg"});
   }
 
+  List<List<Pixel>> new_pixels(int height, int width) {
+    var pixels = new List<List<Pixel>>(height);
+    for (int i = 0; i< height; i++) {
+      pixels[i] = new List<Pixel>(width);
+    }
+    return pixels;
+  }
+
   List<List<Pixel>> parse_image_data(ImageData data) {
-    var pixels = new List<List<Pixel>>(data.height);
+    var pixels = new_pixels(data.height, data.width);
 
     var d = data.data;
 
     int stride = 4;
     for (int i = 0; i < data.height; i++) {
-      pixels[i] = new List<Pixel>(data.width);
       for (int j = 0; j < data.width; j++) {
         int index = (i*(data.width)*stride) + (j*stride);
         Pixel p = new Pixel(d[index], d[index+1], d[index+2], d[index+3]);
