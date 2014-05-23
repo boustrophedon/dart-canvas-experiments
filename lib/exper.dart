@@ -35,7 +35,7 @@ Pixel pix_avg_all(Pixel p, List<Pixel> pix) {
     b+=o.b;
     a+=o.a;
   }
-  return new Pixel(r~/l, b~/l, g~/l, a~/l);
+  return new Pixel(r~/l, g~/l, b~/l, a~/l);
 }
 
 List<Pixel> shift_by(List<Pixel> l, int shift) {
