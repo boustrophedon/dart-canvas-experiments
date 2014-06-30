@@ -17,6 +17,10 @@ class Pixel {
   Pixel.zero() : r=0, g=0, b=0, a=0;
 }
 
+Pixel choose(List<Pixel> pixels, Random rng) {
+  return pixels[rng.nextInt(pixels.length)];
+}
+
 Pixel pix_avg(Pixel p1, Pixel p2) {
   int r = ((p1.r + p2.r)~/2);
   int g = ((p1.g + p2.g)~/2);
