@@ -1,30 +1,33 @@
-import 'dart:math';
 import 'dart:html';
+import 'dart:math';
 
 import 'package:canvas_experiments/exper.dart';
 
 
 void main() {
-  ShiftBlurExper e = new ShiftBlurExper({'pepsi':"Pepsi_logo_2008.svg", 'archlogo':"archlinux-logo.png", 'color_bars':"SMPTE_Color_Bars.svg"});
+  var e = new CascadeExper({'pepsi':"Pepsi_logo_2008.svg", 'archlogo':"archlinux-logo.png", 'color_bars':"SMPTE_Color_Bars.svg"});
 }
 
-class ShiftBlurExper extends CanvasExperiment {
+class CascadeExper extends CanvasExperiment {
   var test_img;
+  var pepsi_img;
   var pixels;
-  ShiftBlurExper(Map<String, String> images) : super(images) {}
 
-  List<List<Pixel>> transform_pixels(List<List<Pixel>> pixels) {
-    int height = pixels.length;
-    int width = pixels.first.length;
+  CascadeExper(Map<String, String> images) : super(images) {}
+
+  List<List<Pixel>> transform_pixels(List<List<Pixel>> pix) {
+    int height = pix.length;
+    int width = pix.first.length;
 
     var newpix = new_pixels(height, width);
     for (int i = 0; i < height; i++) {
-      var indices = [-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-      var shifts = indices.map((k)=>shift_by(pixels[i],k)).toList();
-      for (int j = 0; j<pixels[i].length; j++) {
-        Pixel p = pixels[i][j];
-        var to_avg = shifts.map( (e) => e[j] ).toList();
-        newpix[i][j] = pix_avg_all(p, to_avg);
+      for (int j = 0; j< width; j++) {
+        Pixel p = pix[i][j];
+        var j1 = max(j-1, 0);
+        var j2 = min(j+1, width-1);
+        var i1 = max(i-1, 0);
+        var i2 = min(i+1, height-1);
+        newpix[i][j] = pix_avg(pix_avg(pix[i][j1], pix[i][j2]), pix_avg(pix[i1][j], pix[i2][j]));
       }
     }
     return newpix;
@@ -32,18 +35,19 @@ class ShiftBlurExper extends CanvasExperiment {
 
   void run() {
     test_img = loader.images['color_bars'];
+    pepsi_img = loader.images['pepsi'];
+
+    context.clearRect(0,0,canvas.height,canvas.width);
+    context.drawImage(test_img, 0,0);
     window.requestAnimationFrame(render);
   }
 
   void render(num time) {
-    context.clearRect(0,0,canvas.height,canvas.width);
 
-    context.drawImage(test_img, 0,0);
+    var pix = parse_image_data(context.getImageData(0,0,test_img.width,test_img.height));
 
-    pixels = parse_image_data(context.getImageData(0,0,test_img.width,test_img.height));
-
-    pixels = transform_pixels(pixels);
-    context.putImageData(unparse_image_data(pixels), test_img.width+20, 0);
+    pixels = transform_pixels(pix);
+    context.putImageData(unparse_image_data(pixels), 0, 0);
 
     window.requestAnimationFrame(render);
   }
